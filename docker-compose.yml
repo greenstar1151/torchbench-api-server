@@ -8,8 +8,8 @@ services:
     image: torchbench-api:latest
     container_name: torchbench-fastapi
     working_dir: /workspace
-    # volumes:
-    #   - .:/workspace/benchmark
+    volumes:
+      - ./app:/workspace/app
     deploy:
       resources:
         reservations:

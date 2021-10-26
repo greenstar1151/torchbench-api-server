@@ -16,8 +16,5 @@ RUN cd /workspace/pytorch_benchmark; python install.py
 COPY ./requirements.txt /workspace/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /workspace/requirements.txt
 
-# Copy main app
-COPY ./app /workspace/app
-
 # Run FastAPI server
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
