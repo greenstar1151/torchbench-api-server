@@ -1,6 +1,8 @@
 import os
 import sys
+import time
 from . import helper
+from .metrics import NvidiaMetrics
 
 from pathlib import Path
 from typing import Optional
@@ -14,10 +16,15 @@ from pytorch_benchmark.torchbenchmark import list_models
 # This is used to cache already queried models in PyTorch
 loaded = {}
 app = FastAPI()
+nvMetrics=NvidiaMetrics()
 
 @app.get('/')
 async def read_root():
     return {"Hello": "World"}
+
+@app.get('/metrics')
+async def metrics():
+    return nvMetrics.collect_metrics()
 
 
 @app.get('/list')
@@ -30,8 +37,9 @@ def run_model(model_name: str, device: str = 'cuda', mode: str = 'jit', test: st
     for Model in list_models():
         if model_name.lower() in Model.name.lower():
             found = True
-            if model_name not in loaded:
-                loaded[model_name] = Model(device=device, jit=(mode == 'jit'))
+            key=model_name+'_'+device
+            if key not in loaded:
+                loaded[key] = Model(device=device, jit=(mode == 'jit'))
             break
     if found:
         pass
@@ -40,7 +48,7 @@ def run_model(model_name: str, device: str = 'cuda', mode: str = 'jit', test: st
         raise HTTPException(status_code=404, detail=f"Unable to find model matching '{model_name}''.")
     
     # build the model and get the chosen test method
-    test = getattr(loaded[model_name], test)
+    test = getattr(loaded[key], test)
 
     time_cpu_total_wall, time_cpu_dispatch, time_gpu = helper.run_one_step(test, device == 'cuda')
 
@@ -50,7 +58,7 @@ def run_model(model_name: str, device: str = 'cuda', mode: str = 'jit', test: st
             'device': device,
             'mode': mode,
             'task': test,
-            'size': helper.sizeof_fmt(helper.get_size(loaded[model_name]))
+            'size': helper.sizeof_fmt(helper.get_size(loaded[key]))
         },
         'result': {
             'CPU Total Wall Time': time_cpu_total_wall, 
