@@ -2,11 +2,11 @@ import torch
 import time
 import sys
 
-def run_one_step(func, cuda):
+def run_one_step(func, is_cuda, niter):
     # Warm-up with one run.
     # func()
 
-    if cuda:
+    if is_cuda:
         torch.cuda.synchronize()
         start_event = torch.cuda.Event(enable_timing=True)
         end_event = torch.cuda.Event(enable_timing=True)
@@ -15,7 +15,7 @@ def run_one_step(func, cuda):
         # Collect time_ns() instead of time() which does not provide better precision than 1
         # second according to https://docs.python.org/3/library/time.html#time.time.
         t0 = time.time_ns()
-        func()
+        func(niter)
         t1 = time.time_ns()
 
         end_event.record()

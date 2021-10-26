@@ -32,7 +32,7 @@ async def list():
     return [m.name.lower() for m in list_models()]
 
 @app.get('/models/{model_name}')
-def run_model(model_name: str, device: str = 'cuda', mode: str = 'jit', test: str = 'eval'):
+def run_model(model_name: str, niter: int = 1, device: str = 'cuda', mode: str = 'jit', test: str = 'eval'):
     found = False
     for Model in list_models():
         if model_name.lower() in Model.name.lower():
@@ -50,7 +50,7 @@ def run_model(model_name: str, device: str = 'cuda', mode: str = 'jit', test: st
     # build the model and get the chosen test method
     test = getattr(loaded[key], test)
 
-    time_cpu_total_wall, time_cpu_dispatch, time_gpu = helper.run_one_step(test, device == 'cuda')
+    time_cpu_total_wall, time_cpu_dispatch, time_gpu = helper.run_one_step(test, device == 'cuda', niter)
 
     return {
         'metadata': {
