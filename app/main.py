@@ -45,7 +45,7 @@ def run_model(model_name: str, device: str = 'cuda', mode: str = 'jit', test: st
         pass
         # print(f"Running {args.test} method from {Model.name} on {args.device} in {args.mode} mode.")
     else:
-        raise HTTPException(status_code=404, detail=f"Unable to find model matching '{model_name}''.")
+        raise HTTPException(status_code=404, detail=f"Unable to find model matching '{model_name}'.")
     
     # build the model and get the chosen test method
     test = getattr(loaded[key], test)
