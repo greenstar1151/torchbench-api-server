@@ -1,10 +1,9 @@
 import os
 import sys
-
 from . import helper
+
 from pathlib import Path
 from typing import Optional
-
 from fastapi import FastAPI, HTTPException
 
 # add path for imports inside torchbenchmark
@@ -19,6 +18,11 @@ app = FastAPI()
 @app.get('/')
 async def read_root():
     return {"Hello": "World"}
+
+
+@app.get('/list')
+async def list():
+    return [m.name.lower() for m in list_models()]
 
 @app.get('/models/{model_name}')
 def run_model(model_name: str, device: str = 'cuda', mode: str = 'jit', test: str = 'eval'):
