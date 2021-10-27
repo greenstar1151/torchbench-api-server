@@ -31,7 +31,7 @@ def run_one_step(func, is_cuda, niter):
 
     else:
         t0 = time.time_ns()
-        func()
+        func(niter)
         t1 = time.time_ns()
         #print('{:<20} {:>20}'.format("CPU Total Wall Time:", "%.3f milliseconds" % ((t1 - t0) / 1_000_000)), sep='')
         return (t1 - t0) / 1_000_000, None, None
