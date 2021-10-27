@@ -31,13 +31,13 @@ async def metrics():
 async def list():
     return [m.name.lower() for m in list_models()]
 
-@app.get('/models/{model_name}')
-def run_model(model_name: str, niter: int = 1, device: str = 'cuda', mode: str = 'jit', test: str = 'eval'):
+@app.get('/eval')
+def run_model(model: str, niter: int = 1, device: str = 'cuda', mode: str = 'jit', test: str = 'eval'):
     found = False
     for Model in list_models():
-        if model_name.lower() in Model.name.lower():
+        if model.lower() in Model.name.lower():
             found = True
-            key=model_name+'_'+device
+            key=model+'_'+device
             if key not in loaded:
                 loaded[key] = Model(device=device, jit=(mode == 'jit'))
             break
@@ -45,7 +45,7 @@ def run_model(model_name: str, niter: int = 1, device: str = 'cuda', mode: str =
         pass
         # print(f"Running {args.test} method from {Model.name} on {args.device} in {args.mode} mode.")
     else:
-        raise HTTPException(status_code=404, detail=f"Unable to find model matching '{model_name}'.")
+        raise HTTPException(status_code=404, detail=f"Unable to find model matching '{model}'.")
     
     # build the model and get the chosen test method
     test = getattr(loaded[key], test)
