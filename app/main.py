@@ -58,6 +58,7 @@ def run_model(model: str, niter: int = 1, device: str = 'cuda', mode: str = 'jit
             'device': device,
             'mode': mode,
             'task': test,
+            'niter': niter,
             'size': helper.sizeof_fmt(helper.get_size(loaded[key]))
         },
         'result': {
