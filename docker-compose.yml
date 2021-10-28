@@ -2,11 +2,10 @@ version: "3"
 
 services:
   torchbench-api-server:
-    build: 
-      context: ./
-      dockerfile: ./Dockerfile
+    build: .
     image: torchbench-api:latest
     container_name: torchbench-fastapi
+    restart: unless-stopped
     working_dir: /workspace
     volumes:
       - ./app:/workspace/app
