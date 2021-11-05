@@ -2,7 +2,7 @@ import os
 import sys
 import time
 from . import helper
-from .metrics import NvidiaMetrics
+#from .metrics import NvidiaMetrics
 
 from pathlib import Path
 from typing import Optional
@@ -17,7 +17,7 @@ from pytorch_benchmark.torchbenchmark import list_models
 lastLoaded=''
 loaded = {}
 app = FastAPI()
-nvMetrics=NvidiaMetrics()
+#nvMetrics=NvidiaMetrics()
 print("[YOLO] calling main!")
 
 @app.get('/')

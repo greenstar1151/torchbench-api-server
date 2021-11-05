@@ -1,5 +1,6 @@
 import torch
-import time
+from .backport import time_ns
+#import time
 import sys
 
 def run_one_step(func, is_cuda, niter):
@@ -14,13 +15,13 @@ def run_one_step(func, is_cuda, niter):
 
         # Collect time_ns() instead of time() which does not provide better precision than 1
         # second according to https://docs.python.org/3/library/time.html#time.time.
-        t0 = time.time_ns()
+        t0 = time_ns()
         func(niter)
-        t1 = time.time_ns()
+        t1 = time_ns()
 
         end_event.record()
         torch.cuda.synchronize()
-        t2 = time.time_ns()
+        t2 = time_ns()
 
         # CPU Dispatch time include only the time it took to dispatch all the work to the GPU.
         # CPU Total Wall Time will include the CPU Dispatch, GPU time and device latencies.
@@ -30,9 +31,9 @@ def run_one_step(func, is_cuda, niter):
         return (t2 - t0) / 1_000_000, (t1 - t0) / 1_000_000, start_event.elapsed_time(end_event)
 
     else:
-        t0 = time.time_ns()
+        t0 = time_ns()
         func(niter)
-        t1 = time.time_ns()
+        t1 = time_ns()
         #print('{:<20} {:>20}'.format("CPU Total Wall Time:", "%.3f milliseconds" % ((t1 - t0) / 1_000_000)), sep='')
         return (t1 - t0) / 1_000_000, None, None
 
