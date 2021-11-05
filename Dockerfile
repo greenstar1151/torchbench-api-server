@@ -30,8 +30,8 @@ RUN apt-get install git -y
 
 # set up env for dependency install
 RUN git clone -b main --single-branch ${BENCHMARK_REPO} /workspace/pytorch_benchmark
-COPY ./pytorch_benchmark/install.py /workspace/pytorch_benchmark/install.py
-COPY ./pytorch_benchmark/torchbenchmark/__init__.py /workspace/pytorch_benchmark/torchbenchmark/__init__.py
+COPY ./modified_torchbenchrepo_install.py /workspace/pytorch_benchmark/install.py
+COPY ./modified_torchbenchrepo_torchbench___init__.py /workspace/pytorch_benchmark/torchbenchmark/__init__.py
 RUN python3 -m pip install --upgrade pip
 
 # dependency list(additional per model):
