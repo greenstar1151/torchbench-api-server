@@ -16,5 +16,8 @@ RUN cd /workspace/pytorch_benchmark; python install.py
 COPY ./requirements.txt /workspace/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /workspace/requirements.txt
 
+# model init code override
+COPY ./override/models /workspace/pytorch_benchmark/torchbenchmark/models
+
 # Run FastAPI server
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]

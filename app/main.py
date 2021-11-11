@@ -46,7 +46,7 @@ def run_model(model: str, niter: int = 1, device: str = 'cuda', mode: str = 'jit
             if key != lastLoaded:
                 lastLoaded=key
                 del loaded
-                loaded = Model(device=device, jit=(mode == 'jit'))
+                loaded = Model(device=device, jit=(mode == 'jit'), eval_bs=16) # assuming support of eval_bs option
             break
     if found:
         pass
