@@ -1,3 +1,4 @@
 [submodule "pytorch-benchmark"]
 	path = pytorch-benchmark
 	url = https://github.com/greenstar1151/pytorch-benchmark/
+	branch = batchsize_override
