@@ -9,6 +9,7 @@ services:
     working_dir: /workspace
     volumes:
       - ./app:/workspace/app
+      - ./pytorch-benchmark:/workspace/pytorch_benchmark
     deploy:
       resources:
         reservations:

@@ -8,16 +8,13 @@ ENV BENCHMARK_REPO https://github.com/greenstar1151/pytorch-benchmark
 RUN apt-get update
 RUN apt-get install git jq ffmpeg libsm6 libxext6 g++ -y
 
-RUN git clone -b main --single-branch ${BENCHMARK_REPO} /workspace/pytorch_benchmark
+COPY ./pytorch-benchmark /workspace/pytorch_benchmark
 RUN cd /workspace/pytorch_benchmark; python install.py
 # RUN conda install -y python=3.7
 
 # Install FastAPI dependency
 COPY ./requirements.txt /workspace/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /workspace/requirements.txt
-
-# model init code override
-COPY ./override/models /workspace/pytorch_benchmark/torchbenchmark/models
 
 # Run FastAPI server
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
