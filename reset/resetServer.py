@@ -2,14 +2,28 @@ import http.server
 import socketserver
 from http import HTTPStatus
 import os
+import subprocess
+import time
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if(self.path.startswith("/reset")):
             os.system("cd .. && docker-compose restart")
-            self.send_response(HTTPStatus.OK)
-            self.end_headers()
-            self.wfile.write(b'Reset successfully')
+            for _ in range(15):
+                process = subprocess.Popen(r'''curl -s -o /dev/null -w "%{http_code}" http://localhost/''', shell=True, stdout=subprocess.PIPE)
+                stdout = process.communicate()[0]
+                print(stdout)
+                if int(stdout) == 200:
+                    self.send_response(HTTPStatus.OK)
+                    self.end_headers()
+                    self.wfile.write(b'Reset successfully')
+                    break
+                time.sleep(1)
+            else:
+                self.send_response(HTTPStatus.INTERNAL_SERVER_ERROR)
+                self.end_headers()
+                self.wfile.write(b'Resetting container timeout')            
+
         else:
             self.send_response(HTTPStatus.OK)
             self.end_headers()
