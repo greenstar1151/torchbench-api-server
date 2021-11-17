@@ -34,7 +34,7 @@ async def list():
     return [m.name.lower() for m in list_models()]
 
 @app.get('/eval')
-def run_model(model: str, niter: int = 1, device: str = 'cuda', mode: str = 'jit', test: str = 'eval'):
+def run_model(model: str, batch_size: int, niter: int = 1, device: str = 'cuda', mode: str = 'jit', test: str = 'eval'):
     global lastLoaded
     global loaded
 
@@ -46,7 +46,7 @@ def run_model(model: str, niter: int = 1, device: str = 'cuda', mode: str = 'jit
             if key != lastLoaded:
                 lastLoaded=key
                 del loaded
-                loaded = Model(device=device, jit=(mode == 'jit'), eval_bs=16) # assuming support of eval_bs option
+                loaded = Model(device=device, jit=(mode == 'jit'), eval_bs=batch_size) # assuming support of eval_bs option
             break
     if found:
         pass
